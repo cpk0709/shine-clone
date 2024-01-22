@@ -1,0 +1,152 @@
+# name: Build for obliv-landing-dev
+# on:
+#   push:
+#     branches:
+#       - development
+
+# jobs:
+#   upload:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
+
+#       - name: Check if the content has changed
+#         uses: dorny/paths-filter@v2
+#         id: changes
+#         with:
+#           filters: |
+#             public:
+#               - 'public/**'
+
+#       - name: Upload landing image/video to S3
+#         if: steps.changes.outputs.public == 'true' && !contains(github.event.head_commit.message, '[skip upload]')
+#         env:
+#           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#         run: |
+#           aws s3 sync \
+#             --region ap-northeast-2 \
+#             public/obliv s3://onlif-cms-development/dev-landing-image/obliv
+
+#       - name: Create cloud-front invalidation
+#         if: steps.changes.outputs.public == 'true' && !contains(github.event.head_commit.message, '[skip upload]')
+#         env:
+#           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           AWS_DEFAULT_REGION: ap-northeast-2
+#         run: aws cloudfront create-invalidation --distribution-id E11XEH9HX1SXVJ --paths "/dev-landing-image/obliv/*"
+
+#   build:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       id-token: write
+#       contents: read
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
+
+#       - name: Get yarn cache directory path
+#         id: yarn-cache-dir-path
+#         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+#       - name: Cache nextjs build
+#         uses: actions/cache@v3
+#         id: yarn-cache
+#         with:
+#           path: |
+#             ${{ steps.yarn-cache-dir-path.outputs.dir }}
+#             ${{ github.workspace }}/.next/cache
+#           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+#           restore-keys: |
+#             ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-
+
+#       - name: print nextjs cache directory
+#         continue-on-error: true
+#         if: "!contains(github.event.head_commit.message, '[deploy only]')"
+#         run: ls -la ${{ github.workspace }}/.next/cache
+
+#       - name: generate commit message file
+#         run: echo $(git log -1 --no-merges --pretty=%B) > commit_message.txt
+
+#       - name: Configure AWS Credentials
+#         uses: aws-actions/configure-aws-credentials@v1
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: ap-northeast-2
+
+#       - name: Rename nginx config
+#         run: rm -f ./nginx/conf.d/nginx.conf && mv ./nginx/conf.d/nginx-development.conf ./nginx/conf.d/nginx.conf
+
+#       - name: Remove File
+#         run: find public ! \( -name "favicon.ico" -o -name "og-image*" \) -and -type f \( -name "*.png" -o -name "*.webp" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.svg" \) -exec rm -f -v {} \;
+
+#       - name: Generate .env.development.local file from gha secrets
+#         env:
+#           REVALIDATION_SECRET_KEY: ${{secrets.REVALIDATION_SECRET_KEY_DEV}}
+#           SLACK_BOT_TOKEN: ${{secrets.SLACK_BOT_TOKEN}}
+#           SLACK_CHANNEL_ID: ${{secrets.SLACK_CHANNEL_ID}}
+#         run: |
+#           touch .env.development.local
+#           echo REVALIDATION_SECRET_KEY="$REVALIDATION_SECRET_KEY" >> .env.development.local
+#           echo SLACK_BOT_TOKEN="$SLACK_BOT_TOKEN" >> .env.development.local
+#           echo SLACK_CHANNEL_ID="$SLACK_CHANNEL_ID" >>.env.development.local
+
+#           echo "cat .env.development.local"
+#           cat .env.development.local
+#           echo "ls -al ."
+#           ls -al .
+#           echo "ls -al ${{ github.workspace }}"
+#           ls -al ${{ github.workspace }}
+#         shell: bash
+
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v2
+
+#       - name: Login to Amazon ECR
+#         id: login-ecr
+#         uses: aws-actions/amazon-ecr-login@v1
+
+#       - name: Build docker image and push to ECR
+#         uses: docker/build-push-action@v4
+#         env:
+#           DOCKER_BUILDKIT: 1
+#           BUILDKIT_PROGRESS: plain
+#         with:
+#           context: .
+#           file: Dockerfile-dev
+#           push: true
+#           tags: 120122301167.dkr.ecr.ap-northeast-2.amazonaws.com/obliv-landing:dev
+#           cache-from: type=gha
+#           cache-to: type=gha,mode=max
+
+#       - name: Exporting nextjs build cache
+#         if: ${{ !contains(github.event.head_commit.message, '[deploy only]') }}
+#         uses: docker/build-push-action@v4
+#         env:
+#           DOCKER_BUILDKIT: 1
+#           BUILDKIT_PROGRESS: plain
+#         with:
+#           context: .
+#           file: Dockerfile-dev
+#           target: nextjs-cache
+#           outputs: type=local,dest=.
+#           push: false
+#           tags: 120122301167.dkr.ecr.ap-northeast-2.amazonaws.com/obliv-landing:dev
+#           cache-from: type=gha
+
+#       - name: print nextjs cache directory after build
+#         continue-on-error: true
+#         run: ls -la ${{ github.workspace }}/.next/cache
+
+#   deploy:
+#     runs-on: ubuntu-latest
+#     needs: [upload, build]
+#     steps:
+#       - name: Trigger the CodeDeploy in EC2 instance
+#         run: aws deploy --region ap-northeast-2 create-deployment --application-name onlif-landing-application --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name code-deploy-group-onlif-landing-dev --github-location repository=medibuilder/obliv,commitId=${GITHUB_SHA}
+#         env:
+#           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           Default_region_name: ap-northeast-2

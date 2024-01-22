@@ -1,3 +1,4 @@
+// 임시 페이지
 import { css } from '@emotion/react';
 
 import MarginDiv from '@/components/common/atom/MarginDiv';

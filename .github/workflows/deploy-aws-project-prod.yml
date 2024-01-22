@@ -1,0 +1,151 @@
+# name: Build for obliv-production
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   upload:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
+
+#       - name: Check if the content has changed
+#         uses: dorny/paths-filter@v2
+#         id: changes
+#         with:
+#           filters: |
+#             public:
+#               - 'public/**'
+
+#       - name: Upload landing image/video to S3
+#         if: steps.changes.outputs.public == 'true' && !contains(github.event.head_commit.message, '[skip upload]')
+#         env:
+#           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#         run: |
+#           aws s3 sync \
+#             --region ap-northeast-2 \
+#             public/obliv s3://onlif-cms-production/pro-landing-image/obliv
+
+#       - name: Create cloud-front invalidation
+#         if: steps.changes.outputs.public == 'true' && !contains(github.event.head_commit.message, '[skip upload]')
+#         env:
+#           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           AWS_DEFAULT_REGION: ap-northeast-2
+#         run: aws cloudfront create-invalidation --distribution-id E3HEDXMZ9JVGAM --paths "/pro-landing-image/obliv/*"
+
+#   build:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       id-token: write
+#       contents: read
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
+
+#       - name: Get yarn cache directory path
+#         id: yarn-cache-dir-path
+#         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+#       - name: Cache nextjs build
+#         uses: actions/cache@v3
+#         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+#         with:
+#           path: |
+#             ${{ steps.yarn-cache-dir-path.outputs.dir }}
+#             ${{ github.workspace }}/.next/cache
+#           # Generate a new cache whenever packages or source files change.
+#           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+#           restore-keys: |
+#             ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-
+
+#       - name: print nextjs cache directory
+#         continue-on-error: true
+#         if: "!contains(github.event.head_commit.message, '[deploy only]')"
+#         run: ls -la ${{ github.workspace }}/.next/cache
+
+#       - name: generate commit message file
+#         run: echo $(git log -1 --no-merges --pretty=%B) > commit_message.txt
+
+#       - name: Configure AWS Credentials
+#         uses: aws-actions/configure-aws-credentials@v1
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: ap-northeast-2
+
+#       - name: Remove File
+#         if: ${{!contains(github.event.head_commit.message, '[deploy nginx.conf only]')}}
+#         run: find public ! \( -name "favicon.ico" -o -name "og-image*" \) -and -type f \( -name "*.png" -o -name "*.webp" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.svg" \) -exec rm -f -v {} \;
+
+#       - name: Generate .env.production.local file from gha secrets
+#         env:
+#           REVALIDATION_SECRET_KEY: ${{secrets.REVALIDATION_SECRET_KEY}}
+#           SLACK_BOT_TOKEN: ${{secrets.SLACK_BOT_TOKEN}}
+#           SLACK_CHANNEL_ID: ${{secrets.SLACK_CHANNEL_ID}}
+#         run: |
+#           touch .env.production.local
+#           echo REVALIDATION_SECRET_KEY="$REVALIDATION_SECRET_KEY" >> .env.production.local
+#           echo SLACK_BOT_TOKEN="$SLACK_BOT_TOKEN" >> .env.production.local
+#           echo SLACK_CHANNEL_ID="$SLACK_CHANNEL_ID" >>.env.production.local
+
+#           echo "cat .env.production.local"
+#           cat .env.production.local
+#           echo "ls -al ."
+#           ls -al .
+#           echo "ls -al ${{ github.workspace }}"
+#           ls -al ${{ github.workspace }}
+#         shell: bash
+
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v2
+
+#       - name: Login to Amazon ECR
+#         id: login-ecr
+#         uses: aws-actions/amazon-ecr-login@v1
+
+#       - name: Build docker image and push to ECR
+#         uses: docker/build-push-action@v4
+#         env:
+#           DOCKER_BUILDKIT: 1
+#           BUILDKIT_PROGRESS: plain
+#         with:
+#           context: .
+#           file: Dockerfile
+#           push: true
+#           tags: 120122301167.dkr.ecr.ap-northeast-2.amazonaws.com/obliv-landing:prod
+#           cache-from: type=gha
+#           cache-to: type=gha,mode=max
+
+#       - name: Exporting nextjs build cache
+#         if: ${{ !contains(github.event.head_commit.message, '[deploy only]') }}
+#         uses: docker/build-push-action@v4
+#         env:
+#           DOCKER_BUILDKIT: 1
+#           BUILDKIT_PROGRESS: plain
+#         with:
+#           context: .
+#           file: Dockerfile
+#           target: nextjs-cache
+#           outputs: type=local,dest=.
+#           push: false
+#           tags: 120122301167.dkr.ecr.ap-northeast-2.amazonaws.com/obliv-landing:prod
+#           cache-from: type=gha
+
+#       - name: print nextjs cache directory after build
+#         continue-on-error: true
+#         run: ls -la ${{ github.workspace }}/.next/cache
+
+#   deploy:
+#     runs-on: ubuntu-latest
+#     needs: [upload, build]
+#     steps:
+#       - name: Trigger the CodeDeploy in EC2 instance
+#         run: aws deploy --region ap-northeast-2 create-deployment --application-name obliv-landing --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name production --github-location repository=medibuilder/obliv,commitId=${GITHUB_SHA}
+#         env:
+#           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           Default_region_name: ap-northeast-2

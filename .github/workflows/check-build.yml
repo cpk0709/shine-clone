@@ -1,0 +1,49 @@
+# name: check build for PR
+# on:
+#   pull_request:
+#     branches:
+#       - main
+#       - development
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout leshine-development
+#         uses: actions/checkout@v3
+#         with:
+#           ref: ${{ github.event.pull_request.head.sha }}
+
+#       - name: Get yarn cache directory path
+#         id: yarn-cache-dir-path
+#         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+#       - name: Cache node modules
+#         uses: actions/cache@v3
+#         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+#         with:
+#           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+#           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+#           restore-keys: |
+#             ${{ runner.os }}-yarn-
+
+#       - name: Install dependencies
+#         run: yarn install --frozen-lockfile
+
+#       - name: Generate .env.development.local file from gha secrets
+#         env:
+#           REVALIDATION_SECRET_KEY: ${{secrets.REVALIDATION_SECRET_KEY_DEV}}
+#         run: |
+#           touch .env.development.local
+#           echo REVALIDATION_SECRET_KEY="$REVALIDATION_SECRET_KEY" >> .env.development.local
+
+#           echo "cat .env.development.local"
+#           cat .env.development.local
+#           echo "ls -al ."
+#           ls -al .
+#           echo "ls -al ${{ github.workspace }}"
+#           ls -al ${{ github.workspace }}
+#         shell: bash
+
+#       - name: build project
+#         run: cp -rf ./.env.development ./.env.production && cp -rf ./.env.development.local ./.env.production.local && yarn build
