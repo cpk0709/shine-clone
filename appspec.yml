@@ -1,0 +1,34 @@
+version: 0.0
+os: linux
+files:
+  # code deploy scripts
+  - source:  /appspec.yml
+    destination: /home/ubuntu/obliv-landing-tmp/
+  - source:  /codedeploy-scripts
+    destination: /home/ubuntu/obliv-landing-tmp/codedeploy-scripts
+
+  # docker files
+  - source:  /docker-compose-production.yml
+    destination: /home/ubuntu/obliv-landing-tmp/
+  - source:  /docker-compose-development.yml
+    destination: /home/ubuntu/onlif-landing-tmp/
+  - source:  /Dockerfile
+    destination: /home/ubuntu/obliv-landing-tmp/
+  - source:  /Dockerfile-dev
+    destination: /home/ubuntu/onlif-landing-tmp/
+
+  # nginx files
+  - source:  /nginx/conf.d
+    destination: /home/ubuntu/obliv-landing-tmp/nginx/conf.d
+  - source:  /nginx/conf.d
+    destination: /home/ubuntu/onlif-landing-tmp/nginx/conf.d
+  - source:  /nginx/env
+    destination: /home/ubuntu/obliv-landing-tmp/nginx/env
+
+hooks:
+  BeforeInstall:
+      - location: codedeploy-scripts/beforeInstall-obliv.bash
+        runas: root
+  AfterInstall:
+      - location: codedeploy-scripts/afterInstall-obliv.bash
+        runas: root

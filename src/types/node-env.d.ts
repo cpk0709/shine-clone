@@ -1,0 +1,40 @@
+declare namespace NodeJS {
+  interface ProcessEnv {
+    NEXT_PUBLIC_SEO_TITLE: string;
+    NEXT_PUBLIC_SEO_DESCRIPTION: string;
+    NEXT_PUBLIC_SEO_FAVICON: string;
+    NEXT_PUBLIC_SEO_CANONICAL: string;
+    NEXT_PUBLIC_SEO_OG_URL: string;
+    NEXT_PUBLIC_SEO_OG_TITLE: string;
+    NEXT_PUBLIC_SEO_OG_DESCRIPTION: string;
+    NEXT_PUBLIC_SEO_OG_IMAGE_PATH: string;
+    NEXT_PUBLIC_SEO_OG_WIDTH: string;
+    NEXT_PUBLIC_SEO_OG_HEIGHT: string;
+    NEXT_PUBLIC_SEO_OG_CARD: string;
+    NEXT_PUBLIC_SEO_HOST: string;
+
+    //kakao api key
+    NEXT_PUBLIC_KAKAO_API_KEY: string;
+
+    CMS_REVALIDATE_SECONDS: string;
+    NEXT_PUBLIC_CMS_GET_DATA_URL: string;
+    NEXT_PUBLIC_CMS_HOST_NAME: string;
+    NEXT_PUBLIC_CMS_IMAGE_PATH: string;
+    NEXT_PUBLIC_LANDING_IMAGE_PATH: string;
+    NEXT_PUBLIC_LANDING_IMAGE_PLACEHOLDER_IMAGE: string;
+    NEXT_PUBLIC_CMS_ORIGIN: string;
+    NEXT_PUBLIC_CONTENT_CONFIGURATIONS_API: string;
+    NEXT_PUBLIC_POPUP_CATEGORY: string;
+    NEXT_PUBLIC_NOTICE_CATEGORY: string;
+    NEXT_PUBLIC_EVENT_PERIOD_CATEGORY: string;
+    NEXT_PUBLIC_EVENT_CATEGORY: string;
+
+    // best api server
+    NEXT_PUBLIC_BEST_API_URL: string;
+
+    // api token 발급
+    NEXT_PUBLIC_MSO_API_TOKEN: string;
+
+    NEXT_PUBLIC_EVENT_HANDLER_THROTTLE_TIME: number;
+  }
+}

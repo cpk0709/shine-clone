@@ -1,0 +1,69 @@
+version: "3"
+services:
+  onlif:
+    build: 
+      context: .
+      dockerfile: Dockerfile-dev
+    image: 120122301167.dkr.ecr.ap-northeast-2.amazonaws.com/onlif-landing:dev 
+    ports:
+      - "3000:3000"
+  simple:
+    build: 
+      context: .
+      dockerfile: Dockerfile-dev
+    image: 120122301167.dkr.ecr.ap-northeast-2.amazonaws.com/simple-landing:dev 
+    ports:
+      - "3001:3000"
+  obliv:
+    build: 
+      context: .
+      dockerfile: Dockerfile-dev
+    image: 120122301167.dkr.ecr.ap-northeast-2.amazonaws.com/obliv-landing:dev 
+    ports:
+      - "3002:3000"
+  leshine:
+    build: 
+      context: .
+      dockerfile: Dockerfile-dev
+    image: 120122301167.dkr.ecr.ap-northeast-2.amazonaws.com/leshine-landing:dev 
+    ports:
+      - "3003:3000"
+  onlif-global:
+    build: 
+      context: .
+      dockerfile: Dockerfile-dev
+    image: 120122301167.dkr.ecr.ap-northeast-2.amazonaws.com/onlif-global:dev 
+    ports:
+      - "3004:3000"
+  # nginx:
+  #   image: nginx:stable
+  #   ports:
+  #     - "8080:8080"
+  #     - "8081:8081"
+  #     - "8082:8082"
+  #     - "8083:8083"
+  #   volumes:
+  #     - ./nginx/conf.d/nginx-development.conf:/etc/nginx/nginx.conf:ro
+  #     - ~/nginx/logs:/etc/nginx/logs:rw
+  nginx:
+    container_name: bestclass-nginx
+    restart: unless-stopped
+    image: staticfloat/nginx-certbot
+    ports:
+        - 80:80/tcp
+        - 443:443/tcp
+        - 8080:8080
+        - 8081:8081
+        - 8082:8082
+        - 8083:8083
+        - 8084:8084
+    environment:
+        CERTBOT_EMAIL: leroy@bestclass.kr
+        # variable names are space-separated
+        ENVSUBST_VARS: FQDN
+        FQDN: landing-dev.bestclass.kr
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/user.conf.d:ro
+      - letsencrypt:/etc/letsencrypt
+volumes:
+  letsencrypt:
