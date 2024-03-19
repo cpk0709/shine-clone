@@ -65,7 +65,7 @@ const withPageFrame = <P extends Record<string, unknown>>(
     return (
       <section css={container}>
         {hasGnb && <GlobalNav />}
-        {hasGnb && <MarginDiv />}
+        {/* {hasGnb && <MarginDiv />} */}
         <WrappedComponent {...props} />
         {hasBottomSection && <PageBottomSection />}
         {hasFooter && <Footer />}

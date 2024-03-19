@@ -28,8 +28,14 @@ const container = (isMobileMenuOpen: boolean, scrollDirection: string) => css`
   padding-inline: 25px;
   background-color: transparent;
   box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.15);
+  li.mainMenuLi {
+    color: #fff;
+  }
   &:hover {
     background-color: #fff;
+    li.mainMenuLi {
+      color: #000;
+    }
   }
   @media (min-width: 1500px) {
     display: flex;
@@ -64,14 +70,16 @@ const mainMenu = css`
   height: 100%;
   display: flex;
   align-items: center;
-  color: #000;
+  /* color: #fff; */
   white-space: nowrap;
   background-color: transparent;
-  &:hover {
+  /* &:hover {
     background-color: #fff;
-  }
+    color: #000;
+  } */
   padding-inline: 10px;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
 `;
 const hambergerButton = css`
   cursor: pointer;
@@ -141,6 +149,7 @@ const GlobalNav = () => {
           <ul css={mainMenuList}>
             {globalNavMenuList.map((menu, index) => (
               <li
+                className="mainMenuLi"
                 key={menu.title}
                 onMouseEnter={() => {
                   setHoveredMenuIndex(index);
