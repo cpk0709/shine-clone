@@ -64,3 +64,23 @@
   font-weight: 400;
   font-style: normal;
 }
+
+/* 모든 웹 브라우저를 위한 기본 설정 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 웹킷 기반 브라우저(Safari, Chrome 등)를 위한 설정 */
+::-webkit-scrollbar {
+  display: none; /* 스크롤바를 숨깁니다 */
+}
+
+/* 파이어폭스를 위한 설정 */
+html {
+  scrollbar-width: none; /* 스크롤바를 숨깁니다 */
+}
+
+/* 인터넷 익스플로러 및 엣지를 위한 설정 */
+body {
+  -ms-overflow-style: none; /* 스크롤바를 숨깁니다 */
+}

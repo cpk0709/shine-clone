@@ -26,8 +26,11 @@ const container = (isMobileMenuOpen: boolean, scrollDirection: string) => css`
   justify-content: space-between;
   align-items: center;
   padding-inline: 25px;
-  background-color: #fff;
+  background-color: transparent;
   box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.15);
+  &:hover {
+    background-color: #fff;
+  }
   @media (min-width: 1500px) {
     display: flex;
     height: 80px;
@@ -63,7 +66,10 @@ const mainMenu = css`
   align-items: center;
   color: #000;
   white-space: nowrap;
-  background-color: #fff;
+  background-color: transparent;
+  &:hover {
+    background-color: #fff;
+  }
   padding-inline: 10px;
   cursor: pointer;
 `;

@@ -5,6 +5,7 @@ import withPageFrame from '@/components/common/withPageFrame';
 import MainBanner from '@/components/main/MainBanner';
 import MainProgram from '@/components/main/MainProgram';
 import MainSliderSection from '@/components/main/MainSliderSection';
+import MainVimeo from '@/components/main/MainVimeo';
 import MonthlyObliv from '@/components/main/MonthlyObliv';
 import OblivLocation from '@/components/main/OblivLocation';
 import OblivNews from '@/components/main/OblivNews';
@@ -33,6 +34,7 @@ const Home = (props: Props) => {
 
   return (
     <>
+      <MainVimeo />
       <MainBanner />
       <MainSliderSection />
       <section css={articleWrap}>

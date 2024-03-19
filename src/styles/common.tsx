@@ -166,3 +166,24 @@ export const imageStyle = (width = '100%', mobWidth = '100%') => css`
     width: ${width};
   }
 `;
+
+export const margin = (
+  top: number,
+  bottom: number,
+  left: number,
+  right: number,
+) => css`
+  margin: ${top}px ${right}px ${bottom}px ${left}px;
+`;
+
+export const mobileSpace = (
+  top: number,
+  bottom: number,
+  left: number,
+  right: number,
+  mobileContainerWidth = 1023,
+) => css`
+  @media (max-width: ${mobileContainerWidth}px) {
+    ${margin(top, bottom, left, right)}
+  }
+`;
