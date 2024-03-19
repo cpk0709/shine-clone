@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 
 import PopUpModal from '@/components/common/PopUpModal';
 import withPageFrame from '@/components/common/withPageFrame';
+import ArticleRisingUpSection from '@/components/main/ArticleRisingUpSection';
 import MainBanner from '@/components/main/MainBanner';
 import MainProgram from '@/components/main/MainProgram';
 import MainSliderSection from '@/components/main/MainSliderSection';
@@ -35,6 +36,7 @@ const Home = (props: Props) => {
   return (
     <>
       <MainVimeo />
+      <ArticleRisingUpSection />
       <MainBanner />
       <MainSliderSection />
       <section css={articleWrap}>
