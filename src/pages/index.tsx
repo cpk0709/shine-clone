@@ -11,6 +11,7 @@ import MainVimeo from '@/components/main/MainVimeo';
 import MonthlyObliv from '@/components/main/MonthlyObliv';
 import OblivLocation from '@/components/main/OblivLocation';
 import OblivNews from '@/components/main/OblivNews';
+import ParallaxScrollSection from '@/components/main/ParallaxScrollSection';
 import { getStaticPropsPopUp } from '@/services/ssg';
 import type {
   ContentConfiguration,
@@ -39,6 +40,7 @@ const Home = (props: Props) => {
       <MainVimeo />
       <ArticleRisingUpSection />
       <CountUpSection />
+      <ParallaxScrollSection />
       {/* <MainBanner /> */}
       <MainSliderSection />
       <section css={articleWrap}>
