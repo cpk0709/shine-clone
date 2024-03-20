@@ -28,23 +28,30 @@ const titleWrap = css`
 const listWrap = css`
   display: flex;
   ${responsiveGap(60)}
+  li {
+    transform: translateY(120px);
+    opacity: 0;
+  }
+  li.active {
+    transform: translateY(0);
+    opacity: 1;
+    transition:
+      transform 1.4s ease,
+      opacity 1.4s ease;
+  }
+  li:nth-child(1).active {
+    transition-delay: 0s;
+  }
+  li:nth-child(2).active {
+    transition-delay: 0.4s;
+  }
+  li:nth-child(3).active {
+    transition-delay: 0.9s;
+  }
 `;
 
-const listItem = (isVisible: boolean, delay: number) => css`
-  @keyframes fadeUp {
-    from {
-      transform: translateY(120px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
+const listItem = css`
   width: calc(100vw * (320 / 1240));
-  animation: ${isVisible ? 'fadeUp 1s linear' : 'none'};
-  animation-delay: ${delay}s;
-  /* animation-fill-mode: forwards; */
 `;
 
 const listImgWrap = css`
@@ -100,7 +107,7 @@ const ArticleRisingUpSection = () => {
           </h1>
         </div>
         <ul css={listWrap}>
-          <li css={listItem(isVisible, 0)}>
+          <li className={isVisible ? 'active' : ''} css={listItem}>
             <div css={listImgWrap}>Photo Area</div>
             <div>
               <div css={listTitleWrap}>
@@ -116,7 +123,7 @@ const ArticleRisingUpSection = () => {
               </p>
             </div>
           </li>
-          <li css={listItem(isVisible, 0.4)}>
+          <li className={isVisible ? 'active' : ''} css={listItem}>
             <div css={listImgWrap}>Photo Area</div>
             <div>
               <div css={listTitleWrap}>
@@ -132,7 +139,7 @@ const ArticleRisingUpSection = () => {
               </p>
             </div>
           </li>
-          <li css={listItem(isVisible, 0.9)}>
+          <li className={isVisible ? 'active' : ''} css={listItem}>
             <div css={listImgWrap}>Photo Area</div>
             <div>
               <div css={listTitleWrap}>
