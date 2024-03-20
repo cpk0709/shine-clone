@@ -3,13 +3,15 @@ import { css } from '@emotion/react';
 import PopUpModal from '@/components/common/PopUpModal';
 import withPageFrame from '@/components/common/withPageFrame';
 import ArticleRisingUpSection from '@/components/main/ArticleRisingUpSection';
-import MainBanner from '@/components/main/MainBanner';
+import CountUpSection from '@/components/main/CountUpSection';
+// import MainBanner from '@/components/main/MainBanner';
 import MainProgram from '@/components/main/MainProgram';
 import MainSliderSection from '@/components/main/MainSliderSection';
 import MainVimeo from '@/components/main/MainVimeo';
 import MonthlyObliv from '@/components/main/MonthlyObliv';
 import OblivLocation from '@/components/main/OblivLocation';
 import OblivNews from '@/components/main/OblivNews';
+import ParallaxScrollSection from '@/components/main/ParallaxScrollSection';
 import { getStaticPropsPopUp } from '@/services/ssg';
 import type {
   ContentConfiguration,
@@ -37,7 +39,9 @@ const Home = (props: Props) => {
     <>
       <MainVimeo />
       <ArticleRisingUpSection />
-      <MainBanner />
+      <CountUpSection />
+      <ParallaxScrollSection />
+      {/* <MainBanner /> */}
       <MainSliderSection />
       <section css={articleWrap}>
         <MainProgram />

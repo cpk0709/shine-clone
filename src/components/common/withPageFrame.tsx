@@ -8,6 +8,7 @@ import GlobalNav from '@/components/common/nav/GlobalNav';
 import PageBottomSection from '@/components/common/PageBottomSection';
 import PreparingPage from '@/components/common/PreparingPage';
 import RequestBookingForm from '@/components/common/RequestBookingForm';
+import { logger } from '@/utils/logger';
 
 const container = css`
   position: relative;
@@ -45,6 +46,7 @@ const withPageFrame = <P extends Record<string, unknown>>(
         ...defaultFrameProps,
         ...frameProps,
       };
+    logger.debug('🚀 ~ hasRequestForm:', hasRequestForm);
 
     const handleScrollTop = useCallback(() => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -69,7 +71,7 @@ const withPageFrame = <P extends Record<string, unknown>>(
         <WrappedComponent {...props} />
         {hasBottomSection && <PageBottomSection />}
         {hasFooter && <Footer />}
-        {hasRequestForm && <RequestBookingForm />}
+        {/* {hasRequestForm && <RequestBookingForm />} */}
         <button css={scrollTopBtn} onClick={handleScrollTop}>
           <ImageWrapper
             pcSrc="/obliv/obliv-icon-scroll-top.svg"
