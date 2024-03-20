@@ -3,7 +3,8 @@ import { css } from '@emotion/react';
 import PopUpModal from '@/components/common/PopUpModal';
 import withPageFrame from '@/components/common/withPageFrame';
 import ArticleRisingUpSection from '@/components/main/ArticleRisingUpSection';
-import MainBanner from '@/components/main/MainBanner';
+import CountUpSection from '@/components/main/CountUpSection';
+// import MainBanner from '@/components/main/MainBanner';
 import MainProgram from '@/components/main/MainProgram';
 import MainSliderSection from '@/components/main/MainSliderSection';
 import MainVimeo from '@/components/main/MainVimeo';
@@ -37,7 +38,8 @@ const Home = (props: Props) => {
     <>
       <MainVimeo />
       <ArticleRisingUpSection />
-      <MainBanner />
+      <CountUpSection />
+      {/* <MainBanner /> */}
       <MainSliderSection />
       <section css={articleWrap}>
         <MainProgram />
