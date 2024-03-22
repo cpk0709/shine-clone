@@ -46,7 +46,7 @@ const leftSide = (isFixed: boolean, positionVal: number) => css`
   background: url(${overrideImageSrc('/obliv/view_more_case.webp')});
   background-repeat: no-repeat;
   background-position: center;
-  background-size: contain;
+  background-size: cover;
   height: 100vh;
   width: 100%;
   max-width: 40%;
