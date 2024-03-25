@@ -4,6 +4,7 @@ import PopUpModal from '@/components/common/PopUpModal';
 import withPageFrame from '@/components/common/withPageFrame';
 import ArticleRisingUpSection from '@/components/main/ArticleRisingUpSection';
 import CountUpSection from '@/components/main/CountUpSection';
+import DoctorSwiper from '@/components/main/DoctorSwiper';
 // import MainBanner from '@/components/main/MainBanner';
 import MainProgram from '@/components/main/MainProgram';
 import MainSliderSection from '@/components/main/MainSliderSection';
@@ -40,6 +41,7 @@ const Home = (props: Props) => {
       <MainVimeo />
       <ArticleRisingUpSection />
       <CountUpSection />
+      <DoctorSwiper />
       <ParallaxScrollSection
         leftSideBg="/obliv/view_more_case.webp"
         isRightSideMargin
