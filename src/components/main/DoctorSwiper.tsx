@@ -97,7 +97,6 @@ const swiperItem = css`
       transform: scale(1.15);
     }
     .text-area {
-      background-color: #000048;
       h4,
       p {
         color: #fff;
@@ -156,7 +155,7 @@ const textBackground = css`
   height: 80%;
   z-index: -1;
   background-color: transparent;
-  transition: all 0.3s;
+  transition: all 0.2s ease-in;
 `;
 
 const PrevIcon = () => (
