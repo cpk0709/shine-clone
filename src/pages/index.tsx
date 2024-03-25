@@ -40,7 +40,11 @@ const Home = (props: Props) => {
       <MainVimeo />
       <ArticleRisingUpSection />
       <CountUpSection />
-      <ParallaxScrollSection />
+      <ParallaxScrollSection
+        leftSideBg="/obliv/view_more_case.webp"
+        isRightSideMargin
+      />
+      <ParallaxScrollSection leftSideBg="/obliv/view_more_review.webp" />
       {/* <MainBanner /> */}
       <MainSliderSection />
       <section css={articleWrap}>

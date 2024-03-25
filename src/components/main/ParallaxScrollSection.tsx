@@ -6,12 +6,12 @@ import { overrideImageSrc } from '@/utils/common';
 const container = css`
   min-height: 100vh;
   width: 100%;
-  background-color: yellow;
+  background-color: #fff;
 `;
 
 const listImgWrap = css`
   width: 100%;
-  height: 400px;
+  height: 380px;
   background-color: pink;
   margin-bottom: 60px;
 `;
@@ -22,16 +22,30 @@ const articleCSS = css`
   position: relative;
 `;
 
-const listCSS = css`
+const rightSide = css`
   width: 100%;
-  max-width: 55%;
+  max-width: 57%;
   margin-left: auto;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 60px;
 `;
 
-const leftSide = (isFixed: boolean, positionVal: number) => css`
+const listCSS = css`
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  /* gap: 60px; */
+  li {
+    border-left: 1px solid #999;
+    padding-inline: 50px;
+  }
+`;
+
+const marginCSS = css`
+  width: 100%;
+  height: 100px;
+  border-left: 1px solid #999;
+`;
+
+const leftSide = (isFixed: boolean, positionVal: number, bgImg: string) => css`
   /* section 기분범위 내인 경우 fixed, section 보다 위로 스크롤 한 경우 unset, section 보다 아래인 경우 absolute */
   position: ${isFixed && positionVal < 0
     ? 'fixed'
@@ -43,7 +57,7 @@ const leftSide = (isFixed: boolean, positionVal: number) => css`
   /* section 보다 아래로 내린 경우 bottom에 위치 */
   bottom: ${isFixed ? 'unset' : 0};
   left: 0;
-  background: url(${overrideImageSrc('/obliv/view_more_case.webp')});
+  background: url(${overrideImageSrc(bgImg)});
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -52,7 +66,15 @@ const leftSide = (isFixed: boolean, positionVal: number) => css`
   max-width: 40%;
 `;
 
-const ParallaxScrollSection = () => {
+type ParallaxScrollSectionProps = {
+  leftSideBg: string;
+  isRightSideMargin?: boolean;
+};
+
+const ParallaxScrollSection = ({
+  leftSideBg,
+  isRightSideMargin = false,
+}: ParallaxScrollSectionProps) => {
   // section 위치값. section 모니터 top 에 위치시 0, 그 아래로 스크롤 시 마이너스 값
   const [position, setPosition] = useState(0);
   // article 모니터 고정 기준
@@ -93,39 +115,45 @@ const ParallaxScrollSection = () => {
   return (
     <section css={container} ref={sectionRef}>
       <article css={articleCSS}>
-        <div css={leftSide(isFixed, position)} ref={articleRef}></div>
-        <ul css={listCSS}>
-          <li>
-            <div css={listImgWrap}></div>
-          </li>
-          <li>
-            <div css={listImgWrap}></div>
-          </li>
-          <li>
-            <div css={listImgWrap}></div>
-          </li>
-          <li>
-            <div css={listImgWrap}></div>
-          </li>
-          <li>
-            <div css={listImgWrap}></div>
-          </li>
-          <li>
-            <div css={listImgWrap}></div>
-          </li>
-          <li>
-            <div css={listImgWrap}></div>
-          </li>
-          <li>
-            <div css={listImgWrap}></div>
-          </li>
-          <li>
-            <div css={listImgWrap}></div>
-          </li>
-          <li>
-            <div css={listImgWrap}></div>
-          </li>
-        </ul>
+        <div
+          css={leftSide(isFixed, position, leftSideBg)}
+          ref={articleRef}
+        ></div>
+        <section css={rightSide}>
+          <ul css={listCSS}>
+            <li>
+              <div css={listImgWrap}></div>
+            </li>
+            <li>
+              <div css={listImgWrap}></div>
+            </li>
+            <li>
+              <div css={listImgWrap}></div>
+            </li>
+            <li>
+              <div css={listImgWrap}></div>
+            </li>
+            <li>
+              <div css={listImgWrap}></div>
+            </li>
+            <li>
+              <div css={listImgWrap}></div>
+            </li>
+            <li>
+              <div css={listImgWrap}></div>
+            </li>
+            <li>
+              <div css={listImgWrap}></div>
+            </li>
+            <li>
+              <div css={listImgWrap}></div>
+            </li>
+            <li>
+              <div css={listImgWrap}></div>
+            </li>
+          </ul>
+          {isRightSideMargin && <div css={marginCSS} />}
+        </section>
       </article>
     </section>
   );
