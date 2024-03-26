@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable max-len */
 import 'swiper/css/autoplay';
 import 'swiper/css/effect-fade';
@@ -8,10 +9,21 @@ import type SwiperCore from 'swiper';
 import { Autoplay, EffectFade } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
+import { useMatchMedia } from '@/hooks/use-match-media';
 import { overrideImageSrc } from '@/utils/common';
+
+const container = css`
+  @media (max-width: 1023px) {
+    display: flex;
+    flex-direction: column;
+  }
+`;
 
 const bannerHeader = css`
   padding: 160px 10% 100px;
+  @media (max-width: 1023px) {
+    padding: 70px 20px 30px;
+  }
 `;
 
 const titleWrap = css`
@@ -24,6 +36,15 @@ const titleWrap = css`
     font-size: calc(100vw * (28 / 1240));
   }
   margin-bottom: 50px;
+  @media (max-width: 1023px) {
+    h2 {
+      font-size: 20px;
+    }
+    h1 {
+      font-size: 24px;
+    }
+    margin-bottom: 30px;
+  }
 `;
 
 const titleInnerWrap = css`
@@ -37,6 +58,9 @@ const divider = css`
   height: 1px;
   background-color: #a8a8a8;
   margin-bottom: 50px;
+  @media (max-width: 1023px) {
+    margin-bottom: 30px;
+  }
 `;
 
 const swiperTextList = css`
@@ -51,6 +75,19 @@ const swiperTextList = css`
   li.active {
     color: #222;
   }
+  @media (max-width: 1023px) {
+    gap: 30px;
+    li {
+      font-size: 18px;
+      white-space: nowrap;
+    }
+  }
+`;
+
+const mobileMenuItem = (isActive: boolean) => css`
+  color: ${isActive ? '#000' : '#cfcfcf'};
+  font-weight: 700;
+  /* white-space: nowrap; */
 `;
 
 const bannerContainer = css`
@@ -59,6 +96,9 @@ const bannerContainer = css`
 
 const bannerInnerWrap = css`
   display: flex;
+  @media (max-width: 1023px) {
+    flex-direction: column;
+  }
 `;
 
 const bannerImage = (bgSrc: string) => css`
@@ -67,6 +107,10 @@ const bannerImage = (bgSrc: string) => css`
   background-size: cover;
   width: 100%;
   height: 620px;
+  @media (max-width: 1023px) {
+    flex: unset;
+    height: calc(100vw * (600 / 1240));
+  }
 `;
 
 const bannerDesc = css`
@@ -89,6 +133,20 @@ const bannerDesc = css`
     width: 70%;
     font-size: 18px;
     line-height: 1.6;
+  }
+  @media (max-width: 1023px) {
+    flex: unset;
+    h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    h3 {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 14px;
+    }
   }
 `;
 
@@ -139,7 +197,10 @@ const bannerObj = [
 
 const BannerSwiper = () => {
   const swiperRef = useRef<SwiperCore>();
+  const mobileMenuSwiperRef = useRef<SwiperCore>();
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const isMobile = useMatchMedia();
 
   const handleSwiperTextClick = (index: number) => {
     if (swiperRef.current) {
@@ -147,8 +208,14 @@ const BannerSwiper = () => {
     }
   };
 
+  // useEffect(() => {
+  //   if (mobileMenuSwiperRef.current && isMobile) {
+  //     mobileMenuSwiperRef.current.slideToLoop(currentIndex);
+  //   }
+  // }, [currentIndex, isMobile]);
+
   return (
-    <section>
+    <section css={container}>
       <article css={bannerHeader}>
         <div css={titleWrap}>
           <h2>SHINEAMC 전문의료센터</h2>
@@ -161,44 +228,110 @@ const BannerSwiper = () => {
           </div>
         </div>
         <div css={divider} />
-        <ul css={swiperTextList}>
-          <li
-            className={currentIndex === 0 ? 'active' : ''}
-            onClick={() => handleSwiperTextClick(0)}
+        {!isMobile ? (
+          <ul css={swiperTextList}>
+            <li
+              className={currentIndex === 0 ? 'active' : ''}
+              onClick={() => handleSwiperTextClick(0)}
+            >
+              간담낭췌장 전문센터
+            </li>
+            <li
+              className={currentIndex === 1 ? 'active' : ''}
+              onClick={() => handleSwiperTextClick(1)}
+            >
+              골관절센터
+            </li>
+            <li
+              className={currentIndex === 2 ? 'active' : ''}
+              onClick={() => handleSwiperTextClick(2)}
+            >
+              심장혈관센터
+            </li>
+            <li
+              className={currentIndex === 3 ? 'active' : ''}
+              onClick={() => handleSwiperTextClick(3)}
+            >
+              종양항암센터
+            </li>
+            <li
+              className={currentIndex === 4 ? 'active' : ''}
+              onClick={() => handleSwiperTextClick(4)}
+            >
+              고양이특화진료센터
+            </li>
+            <li
+              className={currentIndex === 5 ? 'active' : ''}
+              onClick={() => handleSwiperTextClick(5)}
+            >
+              24시 응급의료센터
+            </li>
+          </ul>
+        ) : (
+          <Swiper
+            onInit={(core) => {
+              mobileMenuSwiperRef.current = core;
+            }}
+            spaceBetween={50}
+            slidesPerView={3}
+            onSlideChange={(swiper) => {
+              handleSwiperTextClick(swiper.realIndex);
+            }}
+            // 스와이퍼 초기화 되었을 때 실행
+            // onSwiper={(swiper) => console.log(swiper)}
+            // grabCursor={true}
+            loop={true}
           >
-            간담낭췌장 전문센터
-          </li>
-          <li
-            className={currentIndex === 1 ? 'active' : ''}
-            onClick={() => handleSwiperTextClick(1)}
-          >
-            골관절센터
-          </li>
-          <li
-            className={currentIndex === 2 ? 'active' : ''}
-            onClick={() => handleSwiperTextClick(2)}
-          >
-            심장혈관센터
-          </li>
-          <li
-            className={currentIndex === 3 ? 'active' : ''}
-            onClick={() => handleSwiperTextClick(3)}
-          >
-            종양항암센터
-          </li>
-          <li
-            className={currentIndex === 4 ? 'active' : ''}
-            onClick={() => handleSwiperTextClick(4)}
-          >
-            고양이특화진료센터
-          </li>
-          <li
-            className={currentIndex === 5 ? 'active' : ''}
-            onClick={() => handleSwiperTextClick(5)}
-          >
-            24시 응급의료센터
-          </li>
-        </ul>
+            <SwiperSlide>
+              <li
+                css={mobileMenuItem(currentIndex === 0)}
+                onClick={() => handleSwiperTextClick(0)}
+              >
+                간담낭췌장 전문센터
+              </li>
+            </SwiperSlide>
+            <SwiperSlide>
+              <li
+                css={mobileMenuItem(currentIndex === 1)}
+                onClick={() => handleSwiperTextClick(1)}
+              >
+                골관절센터
+              </li>
+            </SwiperSlide>
+            <SwiperSlide>
+              <li
+                css={mobileMenuItem(currentIndex === 2)}
+                onClick={() => handleSwiperTextClick(2)}
+              >
+                심장혈관센터
+              </li>
+            </SwiperSlide>
+            <SwiperSlide>
+              <li
+                css={mobileMenuItem(currentIndex === 3)}
+                onClick={() => handleSwiperTextClick(3)}
+              >
+                종양항암센터
+              </li>
+            </SwiperSlide>
+            <SwiperSlide>
+              <li
+                css={mobileMenuItem(currentIndex === 4)}
+                onClick={() => handleSwiperTextClick(4)}
+              >
+                고양이특화진료센터
+              </li>
+            </SwiperSlide>
+            <SwiperSlide>
+              <li
+                css={mobileMenuItem(currentIndex === 5)}
+                onClick={() => handleSwiperTextClick(5)}
+              >
+                24시 응급의료센터
+              </li>
+            </SwiperSlide>
+          </Swiper>
+        )}
       </article>
       <article css={bannerContainer}>
         <Swiper
