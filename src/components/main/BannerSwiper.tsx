@@ -4,7 +4,7 @@ import 'swiper/css/autoplay';
 import 'swiper/css/effect-fade';
 
 import { css } from '@emotion/react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type SwiperCore from 'swiper';
 import { Autoplay, EffectFade } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -208,11 +208,11 @@ const BannerSwiper = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (mobileMenuSwiperRef.current && isMobile) {
-  //     mobileMenuSwiperRef.current.slideToLoop(currentIndex);
-  //   }
-  // }, [currentIndex, isMobile]);
+  useEffect(() => {
+    if (mobileMenuSwiperRef.current && isMobile) {
+      mobileMenuSwiperRef.current.slideToLoop(currentIndex);
+    }
+  }, [currentIndex, isMobile]);
 
   return (
     <section css={container}>
@@ -274,12 +274,6 @@ const BannerSwiper = () => {
             }}
             spaceBetween={50}
             slidesPerView={3}
-            onSlideChange={(swiper) => {
-              handleSwiperTextClick(swiper.realIndex);
-            }}
-            // 스와이퍼 초기화 되었을 때 실행
-            // onSwiper={(swiper) => console.log(swiper)}
-            // grabCursor={true}
             loop={true}
           >
             <SwiperSlide>
