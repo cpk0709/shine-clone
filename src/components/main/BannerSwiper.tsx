@@ -87,7 +87,7 @@ const swiperTextList = css`
 const mobileMenuItem = (isActive: boolean) => css`
   color: ${isActive ? '#000' : '#cfcfcf'};
   font-weight: 700;
-  /* white-space: nowrap; */
+  white-space: nowrap;
 `;
 
 const bannerContainer = css`
@@ -272,8 +272,8 @@ const BannerSwiper = () => {
             onInit={(core) => {
               mobileMenuSwiperRef.current = core;
             }}
-            spaceBetween={50}
-            slidesPerView={3}
+            spaceBetween={20}
+            slidesPerView={2}
             loop={true}
           >
             <SwiperSlide>
