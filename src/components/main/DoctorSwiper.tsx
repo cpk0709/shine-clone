@@ -2,18 +2,18 @@
 import 'swiper/css';
 
 import { css } from '@emotion/react';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import type SwiperCore from 'swiper';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import ImageWrapper from '@/components/common/ImageWrapper';
-import { useMatchMedia } from '@/hooks/use-match-media';
 
 const mobileWidth = 1400;
 
 const container = css`
   padding: 200px 10% 100px;
+  background-color: #f6f6f6;
 `;
 
 const titleWrap = css`
@@ -34,37 +34,11 @@ const titleInnerWrap = css`
   align-items: flex-end;
 `;
 
-const swiperWrap = (isReversePaginationColor: boolean) => css`
+const swiperWrap = css`
   position: relative;
-  background-color: #fff;
+  background-color: #f6f6f6;
   width: 86%;
   margin: 0 auto;
-  .home-slider {
-    .swiper-pagination-bullets {
-      bottom: 63px;
-      @media (max-width: ${mobileWidth}px) {
-        bottom: 60px;
-      }
-    }
-    .swiper-pagination-bullet {
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-      background: ${isReversePaginationColor
-        ? '#fff'
-        : 'rgba(255, 255, 255, 0.5)'};
-      margin: 0 7.5px;
-      opacity: 1;
-      @media (max-width: ${mobileWidth}px) {
-        width: 10px;
-        height: 10px;
-        margin: 0 5px;
-      }
-    }
-    .swiper-pagination-bullet-active {
-      background: ${isReversePaginationColor ? '#AAA' : '#fff'};
-    }
-  }
 `;
 
 const slideButton = (isPrev: boolean) => css`
@@ -83,7 +57,7 @@ const slideButton = (isPrev: boolean) => css`
 `;
 
 const swiperItem = css`
-  background-color: #fff;
+  background-color: transparent;
   height: 400px;
   overflow-y: hidden;
   display: flex;
@@ -113,7 +87,7 @@ const swiperItem = css`
 `;
 
 const imageCSS = css`
-  background-color: #fff;
+  background-color: transparent;
   transition:
     all 0.3s,
     transform 0.3s;
@@ -125,7 +99,7 @@ const swiperTextArea = css`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #fff;
+  background-color: transparent;
   width: 100%;
   h5 {
     color: #ababab;
@@ -195,11 +169,8 @@ const NextIcon = () => (
 );
 
 const DoctorSwiper = () => {
-  const isMobile = useMatchMedia();
   const swiperRef = useRef<SwiperCore>();
-  const [currentIndex, setCurrentIndex] = useState(1);
-
-  const reversePaginationColorSlides = [3, 4, 5];
+  // const [currentIndex, setCurrentIndex] = useState(1);
 
   return (
     <section css={container}>
@@ -215,12 +186,7 @@ const DoctorSwiper = () => {
           <button>View More &gt;</button>
         </div>
       </div>
-      <article
-        css={swiperWrap(
-          !isMobile &&
-            reversePaginationColorSlides.includes(currentIndex % 5 || 5),
-        )}
-      >
+      <article css={swiperWrap}>
         <button
           css={slideButton(true)}
           onClick={() => {
@@ -244,9 +210,9 @@ const DoctorSwiper = () => {
           }}
           spaceBetween={50}
           slidesPerView={4}
-          onSlideChange={(swiper) => {
-            setCurrentIndex(swiper.activeIndex);
-          }}
+          // onSlideChange={(swiper) => {
+          //   setCurrentIndex(swiper.realIndex);
+          // }}
           // 스와이퍼 초기화 되었을 때 실행
           // onSwiper={(swiper) => console.log(swiper)}
           loop={true}
