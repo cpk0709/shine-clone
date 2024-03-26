@@ -14,6 +14,7 @@ const mobileWidth = 1400;
 
 const container = css`
   padding: 200px 10% 100px;
+  background-color: #f6f6f6;
 `;
 
 const titleWrap = css`
@@ -36,7 +37,7 @@ const titleInnerWrap = css`
 
 const swiperWrap = (isReversePaginationColor: boolean) => css`
   position: relative;
-  background-color: #fff;
+  background-color: #f6f6f6;
   width: 86%;
   margin: 0 auto;
   .home-slider {
@@ -83,7 +84,7 @@ const slideButton = (isPrev: boolean) => css`
 `;
 
 const swiperItem = css`
-  background-color: #fff;
+  background-color: transparent;
   height: 400px;
   overflow-y: hidden;
   display: flex;
@@ -113,7 +114,7 @@ const swiperItem = css`
 `;
 
 const imageCSS = css`
-  background-color: #fff;
+  background-color: transparent;
   transition:
     all 0.3s,
     transform 0.3s;
@@ -125,7 +126,7 @@ const swiperTextArea = css`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #fff;
+  background-color: transparent;
   width: 100%;
   h5 {
     color: #ababab;

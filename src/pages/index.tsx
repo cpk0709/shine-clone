@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import PopUpModal from '@/components/common/PopUpModal';
 import withPageFrame from '@/components/common/withPageFrame';
 import ArticleRisingUpSection from '@/components/main/ArticleRisingUpSection';
+import BannerSwiper from '@/components/main/BannerSwiper';
 import CountUpSection from '@/components/main/CountUpSection';
 import DoctorSwiper from '@/components/main/DoctorSwiper';
 // import MainBanner from '@/components/main/MainBanner';
@@ -42,6 +43,7 @@ const Home = (props: Props) => {
       <ArticleRisingUpSection />
       <CountUpSection />
       <DoctorSwiper />
+      <BannerSwiper />
       <ParallaxScrollSection
         leftSideBg="/obliv/view_more_case.webp"
         isRightSideMargin
