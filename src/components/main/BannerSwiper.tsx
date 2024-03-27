@@ -1,7 +1,7 @@
-/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable max-len */
 import 'swiper/css/autoplay';
 import 'swiper/css/effect-fade';
+import 'swiper/css/free-mode';
 
 import { css } from '@emotion/react';
 import { useEffect, useRef, useState } from 'react';
