@@ -23,6 +23,9 @@ const bannerHeader = css`
   padding: 160px 10% 100px;
   @media (max-width: 1023px) {
     padding: 70px 20px 30px;
+    .swiper-slide {
+      width: auto !important;
+    }
   }
 `;
 
@@ -85,9 +88,11 @@ const swiperTextList = css`
 `;
 
 const mobileMenuItem = (isActive: boolean) => css`
+  display: inline-block;
   color: ${isActive ? '#000' : '#cfcfcf'};
   font-weight: 700;
-  /* white-space: nowrap; */
+  font-size: calc(100vw * (15 / 390));
+  white-space: nowrap;
 `;
 
 const bannerContainer = css`
@@ -274,6 +279,7 @@ const BannerSwiper = () => {
             }}
             spaceBetween={50}
             slidesPerView={3}
+            freeMode={true}
             loop={true}
           >
             <SwiperSlide>
